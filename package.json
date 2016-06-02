@@ -23,6 +23,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "array-find-index": "^1.0.1",
     "ava": "^0.15.1",
     "browserify": "^13.0.1",
     "coveralls": "^2.11.9",
