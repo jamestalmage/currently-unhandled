@@ -26,9 +26,10 @@
     "rejected",
     "promises"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "array-find-index": "^1.0.1"
+  },
   "devDependencies": {
-    "array-find-index": "^1.0.1",
     "ava": "^0.15.1",
     "bluebird": "^3.4.0",
     "browserify": "^13.0.1",
