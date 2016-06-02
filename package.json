@@ -1,7 +1,7 @@
 {
   "name": "currently-rejected",
   "version": "0.1.0",
-  "description": "My mathematical module",
+  "description": "Track the list of currently rejected promises.",
   "license": "MIT",
   "repository": "jamestalmage/currently-rejected",
   "author": {
@@ -16,10 +16,15 @@
     "test": "xo && nyc ava"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "core.js",
+    "browser.js"
   ],
   "keywords": [
-    ""
+    "unhandled",
+    "unhandledRejection",
+    "rejected",
+    "promises"
   ],
   "dependencies": {},
   "devDependencies": {
