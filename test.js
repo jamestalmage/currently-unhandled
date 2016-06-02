@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import {EventEmitter} from 'events';
 import test from 'ava';
 import delay from 'delay';
@@ -7,6 +9,16 @@ import browser from './browser';
 import node from './';
 
 const implementations = {browser, node};
+
+fs.writeFileSync(
+	path.join(__dirname, 'browser-bluebird-test.js'),
+
+	'var Promise = require("bluebird");\n' +
+	fs.readFileSync(
+		path.join(__dirname, 'browser-test.js'),
+		'utf8'
+	)
+);
 
 const mocks = {
 	node() {
@@ -132,31 +144,35 @@ test.serial('node: works as advertised', async t => {
 	t.deepEqual(messages(), []);
 });
 
-if (!isCi) {
-	test.serial.cb('actual browser', t => {
-		new KarmaServer({
-			frameworks: ['browserify', 'mocha'],
-			files: ['browser-test.js'],
-			browsers: ['Chrome'],
+function browserMacro(t, file, browsers) {
+	new KarmaServer({
+		frameworks: ['browserify', 'mocha'],
+		files: [file],
+		browsers,
 
-			preprocessors: {
-				'browser-test.js': ['browserify']
-			},
+		preprocessors: {
+			[file]: ['browserify']
+		},
 
-			browserify: {
-				debug: true
-			},
+		browserify: {
+			debug: true
+		},
 
-			singleRun: true,
-			autoWatch: false
-		}, exitCode => {
-			if (exitCode) {
-				t.fail(`karma exited with: ${exitCode}`);
-			}
-			t.end();
-		}).start();
-	});
+		singleRun: true,
+		autoWatch: false
+	}, exitCode => {
+		if (exitCode) {
+			t.fail(`karma exited with: ${exitCode}`);
+		}
+		t.end();
+	}).start();
 }
+
+if (!isCi) {
+	test.serial.cb('actual browser (native promise)', browserMacro, 'browser-test.js', ['Chrome']); // eslint-disable-line ava/test-ended
+}
+
+test.serial.cb('actual browser (bluebird)', browserMacro, 'browser-bluebird-test.js', isCi ? ['Firefox'] : ['Firefox', 'Chrome']); // eslint-disable-line ava/test-ended
 
 test.todo('add Firefox as tested browser when it supports the feature');
 test.todo('add Safari as tested browser when it supports the feature');

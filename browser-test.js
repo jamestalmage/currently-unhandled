@@ -14,18 +14,18 @@ it('works in a browser', function () {
 
 	p1 = Promise.reject(new Error('foo'));
 
-	return delay(10).then(function () {
+	return delay(300).then(function () {
 		assert.deepEqual(messages(), ['foo']);
 		p2 = Promise.reject(new Error('bar'));
-		return delay(10);
+		return delay(300);
 	}).then(function () {
 		assert.deepEqual(messages(), ['foo', 'bar']);
 		p1.catch(function () {});
-		return delay(10);
+		return delay(300);
 	}).then(function () {
 		assert.deepEqual(messages(), ['bar']);
 		p2.catch(function () {});
-		return delay(10);
+		return delay(300);
 	}).then(function () {
 		assert.deepEqual(messages(), []);
 	});
