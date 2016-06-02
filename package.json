@@ -1,0 +1,46 @@
+{
+  "name": "currently-rejected",
+  "version": "0.0.0",
+  "description": "My mathematical module",
+  "license": "MIT",
+  "repository": "jamestalmage/currently-rejected",
+  "author": {
+    "name": "James Talmage",
+    "email": "james@talmage.io",
+    "url": "github.com/jamestalmage"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo && nyc ava"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "ava": "^0.15.1",
+    "coveralls": "^2.11.9",
+    "nyc": "^6.4.0",
+    "xo": "^0.15.0"
+  },
+  "ava": {
+    "files": "test.js"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  },
+  "xo": {
+    "envs": [
+      "browser",
+      "node"
+    ]
+  }
+}
