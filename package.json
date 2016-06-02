@@ -24,9 +24,21 @@
   "dependencies": {},
   "devDependencies": {
     "ava": "^0.15.1",
+    "browserify": "^13.0.1",
     "coveralls": "^2.11.9",
+    "delay": "^1.3.1",
+    "is-ci": "^1.0.8",
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.5",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.0.1",
+    "mocha": "^2.5.3",
     "nyc": "^6.4.0",
+    "watchify": "^3.7.0",
     "xo": "^0.15.0"
+  },
+  "browser": {
+    "./index.js": "./browser.js"
   },
   "ava": {
     "files": "test.js"
@@ -40,6 +52,7 @@
   "xo": {
     "envs": [
       "browser",
+      "mocha",
       "node"
     ]
   }

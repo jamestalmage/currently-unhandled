@@ -1,5 +1,8 @@
 import {EventEmitter} from 'events';
 import test from 'ava';
+import delay from 'delay';
+import isCi from 'is-ci';
+import {Server as KarmaServer} from 'karma';
 import browser from './browser';
 import node from './';
 
@@ -49,16 +52,18 @@ function event(reason) {
 	};
 }
 
+function messagesHelper(currentlyUnhandled) {
+	return () => currentlyUnhandled().map(obj => obj.reason.message);
+}
+
 function generateTests(type) {
 	function setup() {
 		const mock = mocks[type]();
 		const currentlyUnhandled = implementations[type](mock.mock);
 
-		const reasons = () => currentlyUnhandled().map(obj => obj.reason);
-		const messages = () => currentlyUnhandled().map(obj => obj.reason.message);
-		const promises = () => currentlyUnhandled().map(obj => obj.promise);
+		const messages = messagesHelper(currentlyUnhandled);
 
-		return {mock, currentlyUnhandled, reasons, messages, promises};
+		return {mock, currentlyUnhandled, messages};
 	}
 
 	test(`${type}: adds promises as they are rejected`, t => {
@@ -106,3 +111,53 @@ function generateTests(type) {
 generateTests('browser');
 generateTests('node');
 
+test.serial('node: works as advertised', async t => {
+	var currentlyUnhandled = node();
+	var messages = messagesHelper(currentlyUnhandled);
+
+	var p1 = Promise.reject(new Error('foo'));
+	await delay(10);
+	t.deepEqual(messages(), ['foo']);
+
+	var p2 = Promise.reject(new Error('bar'));
+	await delay(10);
+	t.deepEqual(messages(), ['foo', 'bar']);
+
+	p1.catch(() => {});
+	await delay(10);
+	t.deepEqual(messages(), ['bar']);
+
+	p2.catch(() => {});
+	await delay(10);
+	t.deepEqual(messages(), []);
+});
+
+if (!isCi) {
+	test.serial.cb('actual browser', t => {
+		new KarmaServer({
+			frameworks: ['browserify', 'mocha'],
+			files: ['browser-test.js'],
+			browsers: ['Chrome'],
+
+			preprocessors: {
+				'browser-test.js': ['browserify']
+			},
+
+			browserify: {
+				debug: true
+			},
+
+			singleRun: true,
+			autoWatch: false
+		}, exitCode => {
+			if (exitCode) {
+				t.fail(`karma exited with: ${exitCode}`);
+			}
+			t.end();
+		}).start();
+	});
+}
+
+test.todo('add Firefox as tested browser when it supports the feature');
+test.todo('add Safari as tested browser when it supports the feature');
+test.todo('add IE as tested browser when it supports the feature');
