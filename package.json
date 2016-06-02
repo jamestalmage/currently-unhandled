@@ -1,9 +1,9 @@
 {
-  "name": "currently-rejected",
+  "name": "currently-unhandled",
   "version": "0.2.0",
-  "description": "Track the list of currently rejected promises.",
+  "description": "Track the list of currently unhandled promise rejections.",
   "license": "MIT",
-  "repository": "jamestalmage/currently-rejected",
+  "repository": "jamestalmage/currently-unhandled",
   "author": {
     "name": "James Talmage",
     "email": "james@talmage.io",
